@@ -69,7 +69,7 @@ namespace l1t
 	  RegionalMuonCand muCand;
 	  RegionalMuonRawDigiTranslator::fillRegionalMuonCand(muCand, raw_first, raw_secnd, processor, tftype::bmtf);
 
-	  if (muCand.hwQual() == 0)
+	  if (muCand.hwQual() == 0 && !isKalman)
 	    continue;//though away muons with Zero-Quality
 
 	  if (isKalman) {
