@@ -25,7 +25,7 @@ from DQM.L1TMonitorClient.L1TStage2uGMTEmulatorClient_cff import *
 # BMTF emulator client
 from DQM.L1TMonitorClient.L1TStage2BMTFEmulatorClient_cff import *
 
-# KBMTF emulator client
+# Second BMTF Emulator Client
 from DQM.L1TMonitorClient.L1TStage2kBMTFEmulatorClient_cff import *
 
 # OMTF emulator client
@@ -49,7 +49,7 @@ l1TStage2EmulatorClients = cms.Sequence(
 		        l1tStage2CaloLayer2DEClientSummary
                       + l1tStage2uGMTEmulatorClient
                       + l1tStage2BMTFEmulatorClient
-                      + l1tStage2kBMTFEmulatorClient
+                      + l1tStage2BMTFEmulatorSecondClient
                       + l1tStage2OMTFEmulatorClient
                       + l1tStage2EMTFEmulatorClient
                       + l1tStage2EmulatorEventInfoClient

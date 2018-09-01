@@ -126,7 +126,7 @@ from DQM.L1TMonitor.L1TdeStage2uGT_cfi import *
 # sequence to run for every event
 l1tStage2EmulatorOnlineDQM = cms.Sequence(
     l1tdeStage2Bmtf +
-    l1tdeStage2KalmanBmtf +
+    l1tdeStage2BmtfSecond +
     l1tdeStage2Omtf +
     l1tdeStage2EmtfOnlineDQMSeq +
     l1tStage2uGMTEmulatorOnlineDQMSeq +
