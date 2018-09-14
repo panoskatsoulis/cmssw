@@ -7,7 +7,7 @@ from DQM.L1TMonitor.L1TdeStage2BMTF_cfi import *
 # Plots for BMTF
 l1tdeStage2BmtfSecond = l1tdeStage2Bmtf.clone()
 l1tdeStage2BmtfSecond.regionalMuonCollection1 = cms.InputTag("bmtfDigis","BMTF2")
-l1tdeStage2BmtfSecond.regionalMuonCollection2 = cms.InputTag("valKBmtfDigis", "BMTF") ## Here needs to change to BMTF2 (Kalman Emu produces also 'BMTF' collection)
+l1tdeStage2BmtfSecond.regionalMuonCollection2 = cms.InputTag("valBmtfAlgoSel", "BMTF2")
 l1tdeStage2BmtfSecond.monitorDir = cms.untracked.string("L1TEMU/L1TdeStage2BMTF/L1TdeStage2BMTF-Secondary")
 l1tdeStage2BmtfSecond.regionalMuonCollection1Title = cms.untracked.string("BMTF2 data")
 l1tdeStage2BmtfSecond.regionalMuonCollection2Title = cms.untracked.string("BMTF2 emulator")

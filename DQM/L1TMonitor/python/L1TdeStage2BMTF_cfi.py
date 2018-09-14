@@ -9,7 +9,8 @@ from DQMServices.Core.DQMEDAnalyzer import DQMEDAnalyzer
 l1tdeStage2Bmtf = DQMEDAnalyzer(
     "L1TStage2RegionalMuonCandComp",
     regionalMuonCollection1 = cms.InputTag("bmtfDigis", "BMTF"),
-    regionalMuonCollection2 = cms.InputTag("valBmtfDigis", "BMTF"),
+    # regionalMuonCollection2 = cms.InputTag("valBmtfDigis", "BMTF"), # didn't remove the default config
+    regionalMuonCollection2 = cms.InputTag("valBmtfAlgoSel", "BMTF"),
     monitorDir = cms.untracked.string("L1TEMU/L1TdeStage2BMTF"),
     regionalMuonCollection1Title = cms.untracked.string("BMTF data"),
     regionalMuonCollection2Title = cms.untracked.string("BMTF emulator"),
