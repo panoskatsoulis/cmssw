@@ -5,10 +5,8 @@
 
 #include "L1TBMTFAlgoSelector.h"
 
-//The Constructor Initializes 2 RegionalMuonCandBxCollections and defines what to be consumed
-dqmBmtfAlgoSelector::L1TBMTFAlgoSelector::L1TBMTFAlgoSelector(const edm::ParameterSet & ps)//:
-//  bmtfTriggering(new l1t::RegionalMuonCandBxCollection()),
-//  bmtfSecondary(new l1t::RegionalMuonCandBxCollection())
+//The Constructor defines what to be consumed and produced
+dqmBmtfAlgoSelector::L1TBMTFAlgoSelector::L1TBMTFAlgoSelector(const edm::ParameterSet & ps)
 {
   bmtfKalmanToken = consumes<l1t::RegionalMuonCandBxCollection>(ps.getParameter<edm::InputTag>("bmtfKalman"));
   bmtfLegacyToken = consumes<l1t::RegionalMuonCandBxCollection>(ps.getParameter<edm::InputTag>("bmtfLegacy"));
@@ -52,12 +50,12 @@ void dqmBmtfAlgoSelector::L1TBMTFAlgoSelector::produce(edm::Event & eve, const e
                      header.lvl1ID(), header.bxID(), false, false ) ) {
 
     edm::LogError("L1TDQM") << "Could not extract AMC13 Packet.";
-   // return;
+    return;
   }
 
   edm::LogInfo("L1TDQM") << "AMC13-packet-payload size = " << packet.payload().size();
   unsigned algo_ver;
-  if (packet.payload().size() > 0) {
+  if (!packet.payload().empty()) {
     auto payload64 = ( packet.payload().at(0) ).data();
     const uint32_t *start = (const uint32_t*) payload64.get();
     const uint32_t *end = start + (packet.payload().at(0).size() * 2);
@@ -80,39 +78,12 @@ void dqmBmtfAlgoSelector::L1TBMTFAlgoSelector::produce(edm::Event & eve, const e
   edm::Handle<l1t::RegionalMuonCandBxCollection> bmtfLegacy;
   eve.getByToken(bmtfLegacyToken, bmtfLegacy);
 
-  // auto *bmtfKalman_copy = new l1t::RegionalMuonCandBxCollection(bmtfKalman->size(),
-  // 								bmtfKalman->getFirstBX(),
-  // 								bmtfKalman->getLastBX()
-  // 								);
-  // auto *bmtfLegacy_copy = new l1t::RegionalMuonCandBxCollection(bmtfLegacy->size(),
-  // 								bmtfLegacy->getFirstBX(),
-  // 								bmtfLegacy->getLastBX()
-  // 								);
-
-  // unsigned int idx = 0;
-  // for (auto bx = bmtfKalman_copy->getFirstBX(); bx <= bmtfKalman_copy->getLastBX(); bx++) {
-
-  //   if ( not bmtfKalman->isEmpty(bx) )
-  //     bmtfKalman_copy->set(bx, idx, (*bmtfKalman)[idx]);
-
-  //   idx++;
-  // }
-
-  // idx = 0;
-  // for (auto bx = bmtfLegacy_copy->getFirstBX(); bx <= bmtfLegacy_copy->getLastBX(); bx++) {
-
-  //   if ( not bmtfLegacy->isEmpty(bx) )
-  //     bmtfLegacy_copy->set(bx, idx, (*bmtfLegacy)[idx]);
-
-  //   idx++;
-  // }
-
   auto *bmtfKalman_copy = new l1t::RegionalMuonCandBxCollection(*bmtfKalman);
   auto *bmtfLegacy_copy = new l1t::RegionalMuonCandBxCollection(*bmtfLegacy);
 
-  std::cout << "copy RegionalMuonCandBxCollections created" << std::endl;
-  std::cout << "bmtfKalman_copy address: " << bmtfKalman_copy << std::endl;
-  std::cout << "bmtfLegacy_copy address: " << bmtfLegacy_copy << std::endl;
+  edm::LogInfo("L1TDQM") << "copy RegionalMuonCandBxCollections created";
+  edm::LogInfo("L1TDQM") << "bmtfKalman_copy address: " << bmtfKalman_copy;
+  edm::LogInfo("L1TDQM") << "bmtfLegacy_copy address: " << bmtfLegacy_copy;
 
   std::unique_ptr<l1t::RegionalMuonCandBxCollection> bmtfTriggering, bmtfSecondary;
   if ( algo_ver >= 2499805536) {//95000160(hex)
@@ -126,19 +97,15 @@ void dqmBmtfAlgoSelector::L1TBMTFAlgoSelector::produce(edm::Event & eve, const e
     bmtfSecondary.reset(bmtfKalman_copy);
   }
 
-  std::cout << "Triggering and Secondary pointers filled:" << std::endl;
-  std::cout << "bmtfTriggering address: " << bmtfTriggering.get() << std::endl;
-  std::cout << "bmtfSecondary address: " << bmtfSecondary.get() << std::endl;
+  edm::LogInfo("L1TDQM") << "Triggering and Secondary pointers filled:";
+  edm::LogInfo("L1TDQM") << "bmtfTriggering address: " << bmtfTriggering.get();
+  edm::LogInfo("L1TDQM") << "bmtfSecondary address: " << bmtfSecondary.get();
   
   eve.put(std::move(bmtfTriggering),"BMTF");
   eve.put(std::move(bmtfSecondary),"BMTF2");
 
-  std::cout << "reached return..." << std::endl;
   return;
 }
-
-//void L1TBMTFAlgoSelector::beginStream(edm::StreamID) {}
-//void L1TBMTFAlgoSelector::endStream() {}
 
 using namespace dqmBmtfAlgoSelector;
 DEFINE_FWK_MODULE(L1TBMTFAlgoSelector);
