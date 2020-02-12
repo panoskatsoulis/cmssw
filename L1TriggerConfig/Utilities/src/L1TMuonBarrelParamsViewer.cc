@@ -66,7 +66,8 @@ void L1TMuonBarrelParamsViewer::analyze(const edm::Event& iEvent, const edm::Eve
 
     edm::ESHandle<L1TMuonBarrelParams> handle1;
     evSetup.get<L1TMuonBarrelParamsRcd>().get( handle1 ) ;
-    boost::shared_ptr<L1TMuonBarrelParams> ptr(new L1TMuonBarrelParams(*(handle1.product ())));
+    boost::shared_ptr<L1TMuonBarrelParams> ptr( new L1TMuonBarrelParams(*( handle1.product() ))
+						);//this is the constructor of the shared_ptr
 
     L1TMuonBarrelParamsHelper *ptr1 = (L1TMuonBarrelParamsHelper*)ptr.get();
 
@@ -171,6 +172,13 @@ void L1TMuonBarrelParamsViewer::analyze(const edm::Event& iEvent, const edm::Eve
     // FW version
     cout << "fwVersion=                 " << ptr1->fwVersion() << endl;
     cout << "version=                   " << ptr1->version_ << endl;
+
+    cout << " =========================================================== " << endl;
+    cout << " MASKS " << endl;
+    for (auto mask: ptr1->l1mudttfmasks_) {
+      mask.print();
+    }
+
 }
 
 #include "FWCore/PluginManager/interface/ModuleDef.h"

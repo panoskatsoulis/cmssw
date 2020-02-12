@@ -6,7 +6,14 @@ process.MessageLogger.cout.placeholder = cms.untracked.bool(False)
 process.MessageLogger.cout.threshold = cms.untracked.string('DEBUG')
 process.MessageLogger.debugModules = cms.untracked.vstring('*')
 
-process.source = cms.Source("EmptySource", firstRun = cms.untracked.uint32(276403)) #91
+process.source = cms.Source("EmptySource",
+                            firstRun = cms.untracked.uint32(1) ## mc
+                            # firstRun = cms.untracked.uint32(318584) ## pp
+#                            firstRun = cms.untracked.uint32(318585) ## db new payload
+                            # firstRun = cms.untracked.uint32(318608) ## cosmics
+#                            firstRun = cms.untracked.uint32(318610) ## db new payload
+#                            firstRun = cms.untracked.uint32(318622) ## pp
+)
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 
 #process.load("L1Trigger.L1TMuon.fakeGmtParams_cff")
@@ -23,34 +30,14 @@ process.GlobalTag.toGet = cms.VPSet(
           ),
  cms.PSet(
            record  = cms.string("L1TMuonBarrelParamsRcd"),
-           tag     = cms.string("L1TMuonBarrelParams_Stage2v0_hlt"),
+#           tag     = cms.string("L1TMuonBarrelParams_Stage2v0_hlt"),
+#           tag     = cms.string("L1TMuonBarrelParams_Stage2v1_hlt"), ## 101X_dataRun2_HLT_v7
+           tag     = cms.string("L1TMuonBarrelParams_static_v96.47"), ## 2016
+#           tag     = cms.string("L1TMuonBarrelParams_static_v91.12"), ## 2016
+#           tag     = cms.string("L1TMuonBarrelParams_static_v96.47"), ## 2017
+#           tag     = cms.string("L1TMuonBarrelParams_Stage2v1_2018_mc"), ## 2018
            connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS")
-          ),
- cms.PSet(
-           record  = cms.string("L1TMuonOverlapParamsRcd"),
-           tag     = cms.string("L1TMuonOverlapParams_Stage2v0_hlt"),
-           connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS")
-          ),
- cms.PSet(
-           record  = cms.string("L1TMuonEndCapParamsRcd"),
-           tag     = cms.string("L1TMuonEndCapParams_Stage2v1_hlt"),
-           connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS")
-          ),
- cms.PSet(
-           record  = cms.string("L1TMuonGlobalParamsRcd"),
-           tag     = cms.string("L1TMuonGlobalParams_Stage2v0_hlt"),
-           connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS")
-          ),
- cms.PSet(
-           record  = cms.string("L1TCaloParamsRcd"),
-           tag     = cms.string("L1TCaloParams_Stage2v3_hlt"),
-           connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS")
-          ),
- cms.PSet(
-           record  = cms.string("L1TGlobalPrescalesVetosRcd"),
-           tag     = cms.string("L1TGlobalPrescalesVetos_Stage2v0_hlt"),
-           connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS")
- )
+          )
 )
 
 ## One can also replace the GT block above with the one below
@@ -94,6 +81,7 @@ process.GlobalTag.toGet = cms.VPSet(
 process.l1cr  = cms.EDAnalyzer("L1MenuViewer")
 process.l1or  = cms.EDAnalyzer("L1TMuonOverlapParamsViewer", printLayerMap = cms.untracked.bool(True) )
 process.l1ecv = cms.EDAnalyzer("L1TMuonEndCapParamsViewer")
+process.l1brl = cms.EDAnalyzer("L1TMuonBarrelParamsViewer")
 process.l1gmr = cms.EDAnalyzer("L1TMuonGlobalParamsViewer", printLayerMap = cms.untracked.bool(True) )
 #process.l1cpv = cms.EDAnalyzer("L1TCaloParamsViewer", printEgIsoLUT = cms.untracked.bool(False) )
 process.l1gpv = cms.EDAnalyzer("L1TGlobalPrescalesVetosViewer",
@@ -101,5 +89,5 @@ process.l1gpv = cms.EDAnalyzer("L1TGlobalPrescalesVetosViewer",
     bxmask_map_verbosity     = cms.untracked.int32(1)
 )
 
-process.p = cms.Path(process.l1cr + process.l1or + process.l1gmr + process.l1gpv)
+process.p = cms.Path(process.l1brl)
 
