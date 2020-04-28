@@ -1,0 +1,22 @@
+#!/bin/bash
+set -e
+
+{ [[ $1 =~ \-*help ]] || [ -z "$1" ]; } && {
+   echo "Tool to create a new fwlite module."
+   echo "Usage make_fwlite_module <module-name>"
+   echo
+   exit 0
+}
+
+newModule=$CMSSW_BASE/src/FWLitePriv/Modules/python/$1.py
+
+head -n 21 $CMSSW_BASE/src/FWLitePriv/Core/python/fwlite_module.py > $newModule
+
+sed -i "/^'''.*/d" $newModule
+sed -i s/NAME/$1/ $newModule
+
+echo "created new python file:"
+echo $newModule
+echo
+
+exit 0

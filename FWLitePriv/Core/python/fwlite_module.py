@@ -1,9 +1,23 @@
 ''' fwlite module template
+import FWLitePriv.Core.fwlite_module
+import ROOT
 
 class MyModule( fwlite_module ):
 
-  def __init__(self, name):
-    super().__init__(name)
+    def __init__(self, name="NAME"):
+      super().__init__(name)
+
+    def begin(self, events):
+        ## do stuff before the event loop
+        return
+
+    def analyze(self, event):
+        ## do stuff per event
+        return
+
+    def end(self, events):
+        ## do stuff after the event loop
+        return
 
 '''
 
@@ -14,14 +28,3 @@ class fwlite_module:
     def __init__(self, name="dummy"):
         self.name = name
 
-    def begin(self, events):
-        print("Run begin() for 'my-dummy-module'")
-        return
-
-    def analyze(self, event):
-        aux_ev = event.eventAuxiliary()
-        print "eventNumber_t:", aux_ev.event(), "module:", self.name
-
-    def end(self, events):
-        print("Run end() for 'my-dummy-module'")
-        return
