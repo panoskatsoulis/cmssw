@@ -1,0 +1,24 @@
+#!/bin/bash
+set -e
+
+{ [[ $1 =~ \-*help ]] || [ -z "$1" ]; } && {
+   echo "Tool to create a new fwlite module."
+   echo "Usage make_fwlite_module <module-name>"
+   echo "-note: any punctuation in <module-name> will be changed to '_', @ to 'At' and # to 'No'"
+   echo
+   exit 0
+}
+
+modulename=$(echo $1 | sed "s/@/At/g; s/#/No/g; s/[\.\+-]/_/g")
+modulefile=$CMSSW_BASE/src/FWLitePriv/Modules/python/$modulename.py
+
+head -n 23 $CMSSW_BASE/src/FWLitePriv/Core/python/fwlite_module.py > $modulefile
+
+sed -i "/^'''.*/d" $modulefile
+sed -i s/NAME/$modulename/g $modulefile
+
+echo "created new python file:"
+echo $modulefile
+echo
+
+exit 0
