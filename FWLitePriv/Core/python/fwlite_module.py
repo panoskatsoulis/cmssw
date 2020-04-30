@@ -2,7 +2,7 @@
 import FWLitePriv.Core.fwlite_module
 import ROOT
 
-class MyModule( fwlite_module ):
+class NAME_module( fwlite_module ):
 
     def __init__(self, name="NAME"):
       super().__init__(name)
@@ -19,6 +19,7 @@ class MyModule( fwlite_module ):
         ## do stuff after the event loop
         return
 
+NAME = NAME_module()
 '''
 
 class fwlite_module:
