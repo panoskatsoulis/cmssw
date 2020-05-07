@@ -539,7 +539,7 @@ class Events:
         if len(argsList)==1 and \
                ( isinstance (argsList[0], tuple) or
                  isinstance (argsList[0], list) ) :
-            if len (argsList) > 3:
+            if len (argsList[0]) > 3:
                 raise RuntimeError, "getByLabel Error: label tuple has too " \
                       "many arguments '%s'" % argsList[0]
             argsList = list(argsList[0])
