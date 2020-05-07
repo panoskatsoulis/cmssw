@@ -22,7 +22,7 @@ class NAME_module( fwlite_module ):
 NAME = NAME_module()
 '''
 
-class fwlite_module:
+class fwlite_module( object ):
     # this class cannot be used as is
     # it must be inherited in order to create each module
 
