@@ -6,6 +6,7 @@ parser = argparse.ArgumentParser(description='Executable for CMSSW FWLite.')
 parser.add_argument('--source', '-s', type=str, help='Comma separated list of files to create the cmssw source.')
 parser.add_argument('--modules', '-m', type=str, help='Comma separated list of python modules to create the cmssw path.')
 parser.add_argument('--events', '-ev', default=-1, type=int, help='Number of events to run.')
+parser.add_argument('--print-every', '-i', default=1, type=int, help='Print every this number of events.')
 args = parser.parse_args()
 # print(args)
 
@@ -54,6 +55,8 @@ def cmsRun(source, path):
     ## run the analyze functions for each event
     for iev,event in enumerate(events):
         if args.events != -1 and iev+1 > args.events: break
+        if iev % args.print_every == 0:
+            print( "Running on event {} ...".format(iev) )
         for module in path:
             module.analyze( event ) # for each module in path, call analyze passing the edm::Event
     ## run the end functions
