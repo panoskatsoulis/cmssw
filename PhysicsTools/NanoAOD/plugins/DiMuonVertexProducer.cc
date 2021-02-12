@@ -183,6 +183,20 @@ DiMuonVertexProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
         muon_pair.addUserFloat("EIP_fromPV",eLxyPV);
         muon_pair.addUserFloat("SIP_fromPV",eLxyPV != 0 ? LxyPV/eLxyPV : 0);
 
+        // IP as shown at: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideTransientTracks 
+        GlobalPoint vert(vtx.motherXYZ().x(), vtx.motherXYZ().y(), vtx.motherXYZ().z());
+        TrajectoryStateClosestToPoint traj1 = tranmu1.trajectoryStateClosestToPoint(vert );
+        TrajectoryStateClosestToPoint traj2 = tranmu2.trajectoryStateClosestToPoint(vert );
+        double dxyz_SV_mu1 = sqrt( pow(traj1.perigeeParameters().transverseImpactParameter(), 2) + pow(traj1.perigeeParameters().longitudinalImpactParameter(), 2) );
+        double dxyz_SV_mu2 = sqrt( pow(traj2.perigeeParameters().transverseImpactParameter(), 2) + pow(traj2.perigeeParameters().longitudinalImpactParameter(), 2) );
+        // Save the largest dxyz
+        if (dxyz_SV_mu1 < dxyz_SV_mu2){
+          muon_pair.addUserFloat("dxyz_SV", dxyz_SV_mu2);
+        }
+        else{
+          muon_pair.addUserFloat("dxyz_SV", dxyz_SV_mu1);          
+        }
+
         //daughter refited
 	std::vector<unsigned> DaughterOrder{0,1};
         if (mu2->pt()>mu->pt() ){
