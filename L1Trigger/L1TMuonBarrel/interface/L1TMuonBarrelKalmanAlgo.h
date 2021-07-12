@@ -12,6 +12,7 @@ Sep. 2017
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "L1Trigger/L1TMuonBarrel/interface/L1TMuonBarrelKalmanLUTs.h"
 #include "DataFormats/L1TMuon/interface/RegionalMuonCand.h"
+#include "CondFormats/L1TObjects/interface/L1TMuonBarrelKalmanParams.h"
 
 class L1TMuonBarrelKalmanAlgo {
 public:
@@ -23,7 +24,9 @@ public:
   typedef ROOT::Math::SMatrix<double, 3, 1> Matrix31;
   typedef ROOT::Math::SMatrix<double, 3, 3> Matrix33;
 
-  L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings);
+  L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings, const L1TMuonBarrelKalmanParams& params); //delegating CondDB
+  L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings, const std::string& dummy); //delegating static
+  L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings); //target for common
   std::pair<bool, L1MuKBMTrack> chain(const L1MuKBMTCombinedStubRef&, const L1MuKBMTCombinedStubRefVector&);
 
   L1MuKBMTrackCollection clean(const L1MuKBMTrackCollection&, uint);

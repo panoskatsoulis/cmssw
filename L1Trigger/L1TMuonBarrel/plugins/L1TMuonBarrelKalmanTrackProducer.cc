@@ -12,6 +12,7 @@
 #include "L1Trigger/L1TMuonBarrel/interface/L1TMuonBarrelKalmanTrackFinder.h"
 #include "DataFormats/L1TMuon/interface/L1MuKBMTCombinedStub.h"
 #include "DataFormats/L1TMuon/interface/RegionalMuonCandFwd.h"
+#include "CondFormats/DataRecord/interface/L1TMuonBarrelParamsRcd.h"
 
 //
 // class declaration
@@ -26,20 +27,38 @@ public:
 
 private:
   void beginStream(edm::StreamID) override;
+  void beginRun(const edm::Run&, const edm::EventSetup&) override;
   void produce(edm::Event&, const edm::EventSetup&) override;
   void endStream() override;
   edm::EDGetTokenT<std::vector<L1MuKBMTCombinedStub> > src_;
   std::vector<int> bx_;
   L1TMuonBarrelKalmanAlgo* algo_;
   L1TMuonBarrelKalmanTrackFinder* trackFinder_;
+  edm::ParameterSet iConfig_;
+  bool useCondDB_;
 };
+
 L1TMuonBarrelKalmanTrackProducer::L1TMuonBarrelKalmanTrackProducer(const edm::ParameterSet& iConfig)
-    : src_(consumes<std::vector<L1MuKBMTCombinedStub> >(iConfig.getParameter<edm::InputTag>("src"))),
-      bx_(iConfig.getParameter<std::vector<int> >("bx")),
-      algo_(new L1TMuonBarrelKalmanAlgo(iConfig.getParameter<edm::ParameterSet>("algoSettings"))),
-      trackFinder_(new L1TMuonBarrelKalmanTrackFinder(iConfig.getParameter<edm::ParameterSet>("trackFinderSettings"))) {
+  : iConfig_(iConfig), useCondDB_(iConfig.getParameter<bool>("useCondDB"))
+{
+  src_ = consumes<std::vector<L1MuKBMTCombinedStub> >(iConfig_.getParameter<edm::InputTag>("src"));
   produces<L1MuKBMTrackBxCollection>();
   produces<l1t::RegionalMuonCandBxCollection>("BMTF");
+}
+
+void L1TMuonBarrelKalmanTrackProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup) {
+  if (useCondDB_) { // fetch the Rcd and initialize what depends on CondDB
+    edm::ESHandle<L1TMuonBarrelKalmanParams> handle;
+    const L1TMuonBarrelKalmanParams* kalmanParams;
+    iSetup.get<L1TMuonBarrelKalmanParamsRcd>().get(handle);
+    kalmanParams = handle.product();
+    algo_ = new L1TMuonBarrelKalmanAlgo(iConfig_.getParameter<edm::ParameterSet>("algoSettings"), *kalmanParams);
+  }
+  else // if not go static
+    algo_ = new L1TMuonBarrelKalmanAlgo(iConfig_.getParameter<edm::ParameterSet>("algoSettings"), "");
+  // now initialize the rest (hybrid for now with both ParamsSet and CondDBParams)
+  bx_ = iConfig_.getParameter<std::vector<int> >("bx");
+  trackFinder_ = new L1TMuonBarrelKalmanTrackFinder(iConfig_.getParameter<edm::ParameterSet>("trackFinderSettings"));
 }
 
 L1TMuonBarrelKalmanTrackProducer::~L1TMuonBarrelKalmanTrackProducer() {

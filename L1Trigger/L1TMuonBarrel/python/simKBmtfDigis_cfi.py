@@ -53,6 +53,7 @@ bmtfKalmanTrackingSettings = cms.PSet(
 
 simKBmtfDigis = cms.EDProducer("L1TMuonBarrelKalmanTrackProducer",
     src = cms.InputTag("simKBmtfStubs"),
+    useCondDB = cms.bool(False),
     bx = cms.vint32(-2,-1,0,1,2),
 #    bx = cms.vint32(0),
     algoSettings = bmtfKalmanTrackingSettings,
