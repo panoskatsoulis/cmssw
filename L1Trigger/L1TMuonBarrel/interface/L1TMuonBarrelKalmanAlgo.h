@@ -24,9 +24,10 @@ public:
   typedef ROOT::Math::SMatrix<double, 3, 1> Matrix31;
   typedef ROOT::Math::SMatrix<double, 3, 3> Matrix33;
 
-  L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings, const L1TMuonBarrelKalmanParams& params); //delegating CondDB
-  L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings, const std::string& dummy); //delegating static
-  L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings); //target for common
+  L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings,
+                          const L1TMuonBarrelKalmanParams& params);                      //delegating CondDB
+  L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings, const std::string& dummy);  //delegating static
+  L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings);                            //target for common
   std::pair<bool, L1MuKBMTrack> chain(const L1MuKBMTCombinedStubRef&, const L1MuKBMTCombinedStubRefVector&);
 
   L1MuKBMTrackCollection clean(const L1MuKBMTrackCollection&, uint);

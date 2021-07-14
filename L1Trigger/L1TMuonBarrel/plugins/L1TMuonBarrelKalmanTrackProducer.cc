@@ -39,22 +39,20 @@ private:
 };
 
 L1TMuonBarrelKalmanTrackProducer::L1TMuonBarrelKalmanTrackProducer(const edm::ParameterSet& iConfig)
-  : iConfig_(iConfig), useCondDB_(iConfig.getParameter<bool>("useCondDB"))
-{
+    : iConfig_(iConfig), useCondDB_(iConfig.getParameter<bool>("useCondDB")) {
   src_ = consumes<std::vector<L1MuKBMTCombinedStub> >(iConfig_.getParameter<edm::InputTag>("src"));
   produces<L1MuKBMTrackBxCollection>();
   produces<l1t::RegionalMuonCandBxCollection>("BMTF");
 }
 
 void L1TMuonBarrelKalmanTrackProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup) {
-  if (useCondDB_) { // fetch the Rcd and initialize what depends on CondDB
+  if (useCondDB_) {  // fetch the Rcd and initialize what depends on CondDB
     edm::ESHandle<L1TMuonBarrelKalmanParams> handle;
     const L1TMuonBarrelKalmanParams* kalmanParams;
     iSetup.get<L1TMuonBarrelKalmanParamsRcd>().get(handle);
     kalmanParams = handle.product();
     algo_ = new L1TMuonBarrelKalmanAlgo(iConfig_.getParameter<edm::ParameterSet>("algoSettings"), *kalmanParams);
-  }
-  else // if not go static
+  } else  // if not go static
     algo_ = new L1TMuonBarrelKalmanAlgo(iConfig_.getParameter<edm::ParameterSet>("algoSettings"), "");
   // now initialize the rest (hybrid for now with both ParamsSet and CondDBParams)
   bx_ = iConfig_.getParameter<std::vector<int> >("bx");

@@ -4,16 +4,16 @@
 #include "ap_fixed.h"
 
 //delegating 1: CondDB params + Common static
-L1TMuonBarrelKalmanAlgo::L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings, const L1TMuonBarrelKalmanParams& params)
-  : L1TMuonBarrelKalmanAlgo(settings)
-{
+L1TMuonBarrelKalmanAlgo::L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings,
+                                                 const L1TMuonBarrelKalmanParams& params)
+    : L1TMuonBarrelKalmanAlgo(settings) {
   lutService_ = new L1TMuonBarrelKalmanLUTs(params.pnodes_[params.CONFIG].kalmanLUTsPath_);
 }
 
 //delegating 2: Non-static from py + Common static
-L1TMuonBarrelKalmanAlgo::L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings, const std::string& dummy) //dummy -> to separate from target
-  : L1TMuonBarrelKalmanAlgo(settings)
-{
+L1TMuonBarrelKalmanAlgo::L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings,
+                                                 const std::string& dummy)  //dummy -> to separate from target
+    : L1TMuonBarrelKalmanAlgo(settings) {
   lutService_ = new L1TMuonBarrelKalmanLUTs(settings.getParameter<std::string>("lutFile"));
 }
 
@@ -53,8 +53,7 @@ L1TMuonBarrelKalmanAlgo::L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settin
       pointResolutionPhiB_(settings.getParameter<double>("pointResolutionPhiB")),
       pointResolutionPhiBH_(settings.getParameter<std::vector<double> >("pointResolutionPhiBH")),
       pointResolutionPhiBL_(settings.getParameter<std::vector<double> >("pointResolutionPhiBL")),
-      pointResolutionVertex_(settings.getParameter<double>("pointResolutionVertex"))
-{}
+      pointResolutionVertex_(settings.getParameter<double>("pointResolutionVertex")) {}
 
 std::pair<bool, uint> L1TMuonBarrelKalmanAlgo::getByCode(const L1MuKBMTrackCollection& tracks, int mask) {
   for (uint i = 0; i < tracks.size(); ++i) {
